@@ -7,9 +7,10 @@ db = SQLAlchemy()
 class ToDoList(db.Model):
     """Model for to-do lists"""
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250), unique=True, nullable=False)
+    name = db.Column(db.String(250), nullable=False)
     lastmodified_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    to_do_list_item = db.relationship('ToDoListItem', backref='todolist', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<ToDoList {self.name}>'
@@ -20,12 +21,12 @@ class ToDoListItem(db.Model):
     icon_url = db.Column(db.String(250), nullable=True)
     title = db.Column(db.String(250), nullable=False)
     content = db.Column(db.String(500), nullable=True)
-    completed = db.Column(db.Boolean, default=True)
+    completed = db.Column(db.Boolean, default=False)
     due_time = db.Column(db.DateTime, nullable=True)
     list_id = db.Column(db.Integer, db.ForeignKey('to_do_list.id'), nullable=False)
 
     def __repr__(self):
-        return f'<ToDoListItem {self.content}>'
+        return f'<ToDoListItem {self.title}>'
 
 class User(UserMixin, db.Model):
     """Model for user accounts"""

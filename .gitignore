@@ -159,7 +159,8 @@ TASK.md
 PROJECT_SPECS.md
 SPECIFICATION.md
 *.png
-
+*.jpg
+*.jpeg
 # Temporary files
 *.tmp
 *.temp
