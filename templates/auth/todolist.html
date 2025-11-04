@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>{{ title }}</h2>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.map_url.label(class="form-label") }}
+                {{ form.map_url(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.img_url.label(class="form-label") }}
+                {{ form.img_url(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.location.label(class="form-label") }}
+                {{ form.location(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.seats.label(class="form-label") }}
+                {{ form.seats(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.coffee_price.label(class="form-label") }}
+                {{ form.coffee_price(class="form-control") }}
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="form-check">
+                        {{ form.has_sockets(class="form-check-input") }}
+                        {{ form.has_sockets.label(class="form-check-label") }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        {{ form.has_toilet(class="form-check-input") }}
+                        {{ form.has_toilet.label(class="form-check-label") }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        {{ form.has_wifi(class="form-check-input") }}
+                        {{ form.has_wifi.label(class="form-check-label") }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        {{ form.can_take_calls(class="form-check-input") }}
+                        {{ form.can_take_calls.label(class="form-check-label") }}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

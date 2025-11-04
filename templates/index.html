@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title | default('All Cafes') }}{% endblock %}
+
+{% block content %}
+
+{% if welcome_message %}
+<div class="alert alert-info" role="alert">
+  {{ welcome_message }}
+</div>
+{% endif %}
+
+<div class="p-5 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Welcome to a ToDo List</h1>
+        <p class="fs-4">Your one-stop destination to manage your tasks efficiently.</p>
+    </div>
+</div>
+
+
+{% if current_user.is_authenticated %}
+<div class="text-center mb-4">
+    <a href="{{ url_for('auth.add_todolist') }}" class="btn btn-primary">Add a New ToDo List</a>
+</div>
+{% endif %}
+
+
+<div class="row">
+    {% for todo in todos %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ todo.title }}</h5>
+                {% if current_user.is_authenticated and (current_user.id == todo.user_id or current_user.id == 0) %}
+                <a href="{{ url_for('api.edit_todo', todo_id=todo.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                <a href="{{ url_for('api.delete_todo', todo_id=todo.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col">
+        <p>No to-do lists found.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
