@@ -10,9 +10,14 @@
 {% endif %}
 
 <div class="p-5 mb-4 bg-light rounded-3 text-center">
-    <div class="container-fluid py-5">
+    <div class="container-fluid py-4">
         <h1 class="display-5 fw-bold">Welcome to a ToDo List</h1>
         <p class="fs-4">Your one-stop destination to manage your tasks efficiently.</p>
+        <br>
+        <p class="fs-3">Start here to create your first ToDo list and take control of your tasks!</p>
+        <div class="mb-3">
+            <a href="{{ url_for('main.new_todo') }}" class="btn btn-primary btn-sm">Create</a>
+        </div>
     </div>
 </div>
 

@@ -2,31 +2,10 @@ from typing import Optional
 from urllib import response
 from flask import Blueprint, render_template, redirect, request, url_for, flash
 from models import db, User, ToDoList, ToDoListItem
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import Length, DataRequired, Optional
+from forms import LoginForm, RegistrationForm, ToDoListForm
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Login')
-
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Register')
-
-class ToDoListForm(FlaskForm):
-    name = StringField('To-Do List Name', validators=[DataRequired(), Length(min=2, max=100)])
-
-    item_title = StringField('Item Title', validators=[DataRequired(), Length(min=2, max=100)])
-    item_content = StringField('Item Content', validators=[DataRequired(), Length(min=2, max=500)])
-    item_due_time = StringField('Item Due Time', validators=[Optional()])
-    submit = SubmitField('Create')  
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 

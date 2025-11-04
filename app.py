@@ -21,7 +21,7 @@ def create_app():
     login_manager.init_app(app)
     
     # Register blueprints
-    from routes.main import main_bp
+    from main import main_bp
     from routes.auth import auth_bp
     
     app.register_blueprint(main_bp)
