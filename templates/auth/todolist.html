@@ -65,8 +65,13 @@
     <div class="todolist-header">
         <h2 class="mb-0"><i class="fas fa-tasks"></i> {{ title | default('Create To-Do List') }}</h2>
     </div>
-
-    <form method="POST" action="{{ url_for('auth.add_todolist') }}" id="todolist-form">
+          {# Template note: the `action` template variable should be provided by the caller.
+              - For create: pass action=url_for('auth.add_todolist')
+              - For edit:   pass action=url_for('auth.edit_todolist', list_id=list_id)
+              If `action` is omitted the template falls back to the add route. #}
+          <!-- NOTE: The 'action' template variable controls the form POST target. Provided by
+                 routes.add_todolist or routes.edit_todolist. Default: add_todolist. -->
+          <form method="POST" action="{{ action or url_for('auth.add_todolist') }}" id="todolist-form">
         {{ form.hidden_tag() }}
         
         <!-- ToDo List Title -->

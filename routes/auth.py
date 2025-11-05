@@ -139,13 +139,12 @@ def add_todolist():
         flash('To-Do List created successfully!', 'success')
         return redirect(url_for('main.index'))
     
-    return render_template('auth/todolist.html', form=form, title='Create To-Do List', readonly=False)
+    return render_template('auth/todolist.html', form=form, title='Create To-Do List', readonly=False, action=url_for('auth.add_todolist'))
 
 @login_required
 @auth_bp.route('/edit_todolist/<int:list_id>', methods=['GET', 'POST'])
 def edit_todolist(list_id):
     """User can edit an existing todo list in db"""
-    from datetime import datetime
     
     # Get the existing todo list
     todo_list = ToDoList.query.get_or_404(list_id)
@@ -159,7 +158,8 @@ def edit_todolist(list_id):
     
     if form.validate_on_submit():
         # Update the todolist name and last modified time
-        todo_list.name = form.name.data
+        if todo_list.name != form.name.data:
+            todo_list.name = form.name.data
         todo_list.lastmodified_at = datetime.utcnow()
         
         # Get existing items
@@ -174,7 +174,7 @@ def edit_todolist(list_id):
                 if idx < len(existing_item_list):
                     item = existing_item_list[idx]
                     submitted_item_ids.add(item.id)
-                    # Update existing item
+                    # Update existing item (is managed by Flask-SQLAlchemy)
                     item.icon_url = item_data.get('icon_url', '')
                     item.title = item_data['title']
                     item.content = item_data.get('content', '')
@@ -200,7 +200,7 @@ def edit_todolist(list_id):
                 else:
                     # Keep completed items even if not in submitted form
                     pass
-        
+        print("Submitted item IDs:", submitted_item_ids)
         db.session.commit()
         flash('To-Do List updated successfully!', 'success')
         return redirect(url_for('main.index'))
@@ -222,7 +222,7 @@ def edit_todolist(list_id):
             item_form.due_time.data = item.due_time
             item_form.completed.data = item.completed
     
-    return render_template('auth/todolist.html', form=form, title='Edit To-Do List', readonly=False)
+    return render_template('auth/todolist.html', form=form, title='Edit To-Do List', readonly=False, action=url_for('auth.edit_todolist', list_id=list_id))
 
 @login_required
 @auth_bp.route('/delete_todolist/<int:list_id>')
