@@ -162,6 +162,8 @@ SPECIFICATION.md
 onenote.png
 *.jpg
 *.jpeg
+PR_DESCRIPTION.md
+create todolist task.md
 # Temporary files
 *.tmp
 *.temp
