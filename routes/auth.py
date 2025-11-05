@@ -26,6 +26,10 @@ def login():
         
         if check_password_hash(user.password, password):
             login_user(user)
+            # Respect 'next' parameter if present so user returns to intended page
+            next_page = request.args.get('next') or request.form.get('next') or None
+            if next_page:
+                return redirect(next_page)
         else:
             flash('Sorry, password incorrect, please retry')
         return redirect(url_for('main.index'))
