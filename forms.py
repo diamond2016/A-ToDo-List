@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, FieldList, FormField, DateTimeLocalField, Form
 from wtforms.validators import Length, DataRequired, Optional
 
 class LoginForm(FlaskForm):
@@ -9,14 +9,19 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Register')
 
-class ToDoListForm(FlaskForm):
-    name = StringField('To-Do List Name', validators=[DataRequired(), Length(min=2, max=100)])
+class ToDoListItemForm(Form):
+    """Form for individual todo list items (plain WTForms Form, no CSRF)."""
+    icon_url = StringField('Icon URL', validators=[Optional(), Length(max=250)])
+    title = StringField('Title', validators=[DataRequired(), Length(min=1, max=250)])
+    content = StringField('Content', validators=[Optional(), Length(max=500)])
+    due_time = DateTimeLocalField('Due Time', validators=[Optional()], format='%Y-%m-%dT%H:%M')
+    completed = BooleanField('Completed', default=False)
 
-    item_title = StringField('Item Title', validators=[DataRequired(), Length(min=2, max=100)])
-    item_content = StringField('Item Content', validators=[DataRequired(), Length(min=2, max=500)])
-    item_due_time = StringField('Item Due Time', validators=[Optional()])
-    submit = SubmitField('Create')  
+class ToDoListForm(FlaskForm):
+    """Form for todo list with multiple items"""
+    name = StringField('To-Do List Name', validators=[DataRequired(), Length(min=2, max=250)])
+    items = FieldList(FormField(ToDoListItemForm), min_entries=1)
+    submit = SubmitField('Save To-Do List')  

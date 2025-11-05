@@ -33,7 +33,7 @@ def init_sample_data():
     for todo in todo_data:
         existing_todo = ToDoList.query.filter_by(name=todo['name'], user_id=todo['user_id']).first()
         if not existing_todo:
-            new_todo = ToDoList(name=todo['name'], user_id=todo['user_id'], last_modified_at=datetime.utcnow())
+            new_todo = ToDoList(name=todo['name'], user_id=todo['user_id'], lastmodified_at=datetime.utcnow())
             db.session.add(new_todo)
     db.session.commit()
     # add some todo items to the todos
