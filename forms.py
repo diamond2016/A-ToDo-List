@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, FieldList, FormField, DateTimeLocalField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, FieldList, FormField, DateTimeLocalField, Form
 from wtforms.validators import Length, DataRequired, Optional
 
 class LoginForm(FlaskForm):
@@ -12,8 +12,8 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Register')
 
-class ToDoListItemForm(FlaskForm):
-    """Form for individual todo list items"""
+class ToDoListItemForm(Form):
+    """Form for individual todo list items (plain WTForms Form, no CSRF)."""
     icon_url = StringField('Icon URL', validators=[Optional(), Length(max=250)])
     title = StringField('Title', validators=[DataRequired(), Length(min=1, max=250)])
     content = StringField('Content', validators=[Optional(), Length(max=500)])

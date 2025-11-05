@@ -1,13 +1,47 @@
 from typing import Optional
 from urllib import response
 from flask import Blueprint, render_template, redirect, request, url_for, flash
-from models import db, User, ToDoList, ToDoListItem
-from forms import LoginForm, RegistrationForm, ToDoListForm
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
+from models import db, User, ToDoList, ToDoListItem
+from forms import LoginForm, RegistrationForm, ToDoListForm
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+
+def _print_form_debug_info(form):
+    """Helper to print request and form debug information for nested WTForms debugging.
+
+    Not invoked by default. Call manually when investigating form validation issues.
+    """
+    print('--- form debug helper ---')
+    try:
+        print('request.method:', request.method)
+        print('request.path:', request.path)
+        print('request.form keys:', list(request.form.keys()))
+    except Exception as e:
+        print('request.form access error:', e)
+
+    # CSRF presence (if using Flask-WTF)
+    csrf_attr = getattr(form, 'csrf_token', None)
+    try:
+        print('form.csrf_token present:', bool(csrf_attr))
+        if csrf_attr is not None:
+            print('csrf token value (masked):', str(csrf_attr.data)[:6] + '...' if getattr(csrf_attr, 'data', None) else None)
+    except Exception as e:
+        print('csrf inspect error:', e)
+
+    is_post = (request.method == 'POST')
+    print('is_post:', is_post)
+    try:
+        validation_result = form.validate()
+        print('form.validate() ->', validation_result)
+        print('form.errors ->', form.errors)
+    except Exception as e:
+        print('form.validate() raised exception:', e)
+
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -44,9 +78,9 @@ def register():
         username = form.username.data
         password = str(form.password.data)
         hash_password = generate_password_hash(password, method="pbkdf2:sha256", salt_length=8)
-        user: User = User(
-            username = username,
-            password = hash_password
+        user = User(
+            username=username,
+            password=hash_password
         )
         db.session.add(user)
         db.session.commit()
@@ -73,10 +107,11 @@ def my_todolist():
 @auth_bp.route('/add_todolist', methods=['GET', 'POST'])
 def add_todolist():
     """User can add a new todo list in db"""
-    from datetime import datetime
     
     form = ToDoListForm()
-    
+    # Debug helper available: call _print_form_debug_info(form) when investigating validation issues.
+    # Example (manual): _print_form_debug_info(form)
+
     if form.validate_on_submit():
         # Create new todolist
         new_todolist = ToDoList(
